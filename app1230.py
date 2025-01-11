@@ -1,14 +1,15 @@
+### パッケージの読み込み
 import streamlit as st
 import pandas as pd
 import pydeck as pdk
 import numpy as np
 import plotly.express as px
-import plotly.figure_factory as ff
 
+## データの読み込み
 df = pd.read_csv("nototaxi2.csv",encoding="cp932", header=1)
 
-
 ### サイドバー
+st.sidebar.write("能登町予約制乗合タクシー利用状況")
 Month = st.sidebar.multiselect(
     "Select Months",
     options=df["month"].unique(),
@@ -39,6 +40,7 @@ if Binn:
     df = df[df["binn"].isin(Binn)]
 
 ### 右側
+
 ### ヒストグラム
 #df['year2'] = df['year'].apply(lambda x: '2023' if x == 2023 else ('2024' if x == 2024 else '0'))
 #fig =px.histogram(df,x='age', color='year2', nbins=10, barmode='overlay',
@@ -109,6 +111,7 @@ with col_1:
     fig23.update_yaxes(range=[0, yl])
     st.plotly_chart(fig23, use_container_width=True)
 
+    st.write("地区別利用者数")
     layer = pdk.Layer(
        "ScatterplotLayer",
        size_df231,
@@ -138,6 +141,7 @@ with col_2:
     fig24.update_yaxes(range=[0, yl])
     st.plotly_chart(fig24, use_container_width=True)
 
+    st.write("地区別利用者数")
     layer2 = pdk.Layer(
        "ScatterplotLayer",
        size_df241,

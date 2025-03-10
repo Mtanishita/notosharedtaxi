@@ -53,7 +53,7 @@ df['fX'] = np.where(df['binn']<3, df['O_X'], df['D_X'])
 df['fY'] = np.where(df['binn']<3, df['O_Y'], df['D_Y'])
 
 df23 = df[df['year'] == 2023]
-df24 = df[df['year'] == 2024]
+df24 = df[df['year'] != 2023]
 
 df231 =df23[["age","fX","fY"]].rename(columns={'fX': 'lon', 'fY': 'lat'})
 df241 =df24[["age","fX","fY"]].rename(columns={'fX': 'lon', 'fY': 'lat'})

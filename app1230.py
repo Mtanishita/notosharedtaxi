@@ -10,10 +10,23 @@ df = pd.read_csv("nototaxi2.csv",encoding="cp932", header=1)
 
 ### サイドバー
 st.sidebar.write("能登町予約制乗合タクシー利用状況")
-Month = st.sidebar.multiselect(
-    "Select Months",
-    options=df["month"].unique(),
-    default=df["month"].unique()
+
+# ユニークな値を変更
+new_options = ['1:2月', '2:5-6月', '3:7月','4:11月','5:2025年1月']  # 新しいオプションリスト
+
+# 対応関係を辞書で定義
+option_to_term = {
+    '1:2月': 1,
+    '2:5-6月': 2,
+    '3:7月': 3,
+    '4:11月': 4,
+    '5:2025年1月': 5
+}
+
+Term = st.sidebar.multiselect(
+    "Select Terms",
+    options=new_options,
+    default=new_options
 )
 #Day = st.sidebar.slider("Select a day", 0, 31, (0, 31))
 
@@ -29,8 +42,10 @@ Binn = st.sidebar.multiselect(
     default=df["binn"].unique()
 )
 
-if Month:
-    df = df[df["month"].isin(Month)]
+if Term:
+    # 対応するtermを取得
+    cterms = [option_to_term[option] for option in Term if option in option_to_term]
+    df = df[df["term"].isin(cterms)]
 
 if Day:
 #   df = df[df["day"].between(Day[0], Day[1])]
@@ -47,7 +62,7 @@ if Binn:
 #     color_discrete_sequence=['green', 'blue'], opacity=0.3) 
 #st.plotly_chart(fig)
 
-yl = 350 *len(df)/2630
+yl = 500 *len(df)/3300
 
 df['fX'] = np.where(df['binn']<3, df['O_X'], df['D_X'])
 df['fY'] = np.where(df['binn']<3, df['O_Y'], df['D_Y'])
@@ -86,7 +101,7 @@ size_df241 = df241.groupby(['lon', 'lat']).agg(
 size_df241['size'] = size_df241['count'] ** 0.5 * 100  # スケーリングの調整
 size_df241['mean_scaled'] = np.clip(size_df241['mean'], 0, 255)
 
-df24_passenger = df[df['year'] == 2024]['passenger'].value_counts().reset_index()
+df24_passenger = df[df['year'] != 2023]['passenger'].value_counts().reset_index()
 df24_passenger.columns = ['passenger', 'count']
 df24_passenger['count'] = df24_passenger['count']/df24_passenger['passenger']
 df24_passenger['passenger'] = df24_passenger['passenger'].astype(str)
